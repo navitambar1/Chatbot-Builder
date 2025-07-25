@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Your Support Bot</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="mb-4">Create Your Support Bot</h2>
+    <form id="botForm" action="/create_bot" method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="user_name" class="form-label">Your Name</label>
+        <input type="text" name="user_name" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="brand_name" class="form-label">Brand Name</label>
+        <input type="text" name="brand_name" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="brand_color" class="form-label">Brand Color</label>
+        <input type="color" name="brand_color" class="form-control form-control-color">
+      </div>
+      <div class="mb-3">
+        <label for="training_file" class="form-label">Upload Training File (PDF, DOCX, JSON, etc.)</label>
+        <input type="file" name="training_file" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="bot_prompt" class="form-label">Bot Prompt: </label>
+        <textarea name="bot_prompt" class="form-control">Act as a helpful support bot for my customers...</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">+ Create Bot</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('botForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const res = await fetch('/create_bot', {
+        method: 'POST',
+        body: formData
+      });
+      console.log(res);
+      const { bot_url } = await res.json();
+      if (bot_url) {
+        window.location.href = bot_url; // Redirect to bot chat
+      } else {
+        alert("Bot creation failed.");
+      }
+    });
+  </script>
+</body>
+</html>
