@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ brand }} Bot</title>
+  <style>
+    body { font-family: sans-serif; background-color: {{ color }}20; padding: 20px; }
+    .chat-box { width: 100%; max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+    .chat-log { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    .chat-log div { margin-bottom: 10px; }
+    input[type=text] { width: 80%; padding: 10px; }
+    button { padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <div class="chat-box">
+    <h2>{{ brand }} Support Bot</h2>
+    <div class="chat-log" id="chatLog"></div>
+    <input type="text" id="userInput" placeholder="Ask a question..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const message = input.value;
+      input.value = '';
+      const chatLog = document.getElementById('chatLog');
+      chatLog.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+
+      const response = await fetch(window.location.pathname, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+      });
+      const data = await response.json();
+      chatLog.innerHTML += `<div><strong>Bot:</strong> ${data.reply}</div>`;
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+  </script>
+</body>
+</html>
